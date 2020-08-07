@@ -1,67 +1,29 @@
 #!/usr/bin/env bash
 
 if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
-  echo "Download Maya, Bifrost and BonusTools installers"
-  wget -c https://up.autodesk.com/2020/MAYA/18BBDBD5-9A15-4095-8D5E-089938EB8E24/Autodesk_Maya_2020_1_ML_Linux_64bit.tgz
-  if [[ ! -f "Packages/Bifrost2020-2.1.0.0-1.x86_64.rpm" && ! -f "Bifrost2020-2.1.0.0-1.x86_64.rpm" ]]; then
-    wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/Bifrost2020-2.1.0.0-1.x86_64.rpm
-  fi
-  if [[ ! -f "Packages/MayaBonusTools-2017-2020-linux.sh" && ! -f "MayaBonusTools-2017-2020-linux.sh" ]]; then
-    wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/MayaBonusTools-2017-2020-linux.sh
-  fi
+  echo "Download Mudbox installer"
+  wget -c http://trial2.autodesk.com/NetSWDLD/2020/MBXPRO/506354E9-5590-41EC-BDC8-419F4BB0DCDF/ESD/Autodesk_Mudbox_2020_ML_Linux64.tgz
 
-  echo "Decompress Maya installer"
-  tar -axvf Autodesk_Maya_2020_1_ML_Linux_64bit.tgz
+  echo "Decompress Mudbox installer"
+  tar -axvf Autodesk_Mudbox_2020_ML_Linux64.tgz
   if [[ ! "$?" == 0 ]]; then
     echo "Install failed, nothing to install"
     exit 2
   fi
 
-  if [[ ! -f "Packages/Bifrost2020-2.1.0.0-1.x86_64.rpm" ]]; then
-    mv Bifrost2020-2.1.0.0-1.x86_64.rpm Packages/
-  fi
-  if [[ ! -f "Packages/MayaBonusTools-2017-2020-linux.sh" ]]; then
-    mv MayaBonusTools-2017-2020-linux.sh Packages/
-  fi
   (
-    cd Packages
-
-    echo "Fix Autodesk scripts"
-    sed -i 's/print "Installing CLM Licensing Components...."/print ("Installing CLM Licensing Components....")/' unix_installer.py
-    sed -i 's/cd $ABSDIR/cd "$ABSDIR"/' unix_installer.sh
-    sed -i 's/ silent//' unix_installer.sh
-
     echo "Install missings components"
     sudo dnf install -y audiofile audiofile-devel compat-openssl10 e2fsprogs-libs gamin glibc \
       liberation-fonts-common liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts \
       libICE libpng12 libpng15 libSM libtiff libX11 libXau libxcb libXext libXi libXinerama libXmu \
       libXp libXt mesa-libGLU mesa-libGLw pcre-utf16 redhat-lsb tcsh xorg-x11-fonts-ISO8859-1-100dpi \
       xorg-x11-fonts-ISO8859-1-75dpi zlib
-    if [[ "$?" != "0" ]]; then
-      exit 2
-    fi
 
-    echo "Install Maya & license utils"
+    echo "Install Mudbox & license utils"
     sudo dnf install -y adlmapps17-17.0.49-0.x86_64.rpm
-    sudo dnf install -y Maya2020_64-2020.1-632.x86_64.rpm
     sudo dnf install -y adsklicensing9.2.1.2399-0-0.x86_64.rpm
     sudo dnf install -y adlmflexnetclient-17.0.49-0.x86_64.rpm
-
-    echo "Install Bifrost, Rokoko Motion Library, Substance & Arnold"
-    sudo dnf install -y Substance_in_Maya-2020-2.0.3-1.el7.x86_64.rpm
-    sudo dnf install -y RokokoMotionLibraryMaya-1.0.0-1.x86_64.rpm
-    if [[ -f "Bifrost2020-2.1.0.0-1.x86_64.rpm" ]]; then
-      sudo dnf install -y Bifrost2020-2.1.0.0-1.x86_64.rpm
-    else
-      sudo dnf install -y Bifrost2020-2.0.5.0-1.x86_64.rpm
-    fi
-    sudo ./unix_installer.sh
-
-    if [[ -f "MayaBonusTools-2017-2020-linux.sh" ]]; then
-      echo "Install Maya BonusTools"
-      chmod a+x MayaBonusTools-2017-2020-linux.sh
-      sudo ./MayaBonusTools-2017-2020-linux.sh
-    fi
+    sudo rpm -ivh --force Mudbox2020_64-2020-23.x86_64.rpm
   )
   if [[ "$?" != "0" ]]; then
     exit 2
@@ -72,27 +34,26 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   case $yn in
     [yY] | [yY][Ee][Ss] )
       echo "You can now register your license by running:"
-      echo "sudo LD_LIBRARY_PATH=/opt/Autodesk/Adlm/R17/lib64 /opt/Autodesk/AdskLicensing/9.2.1.2399/helper/AdskLicensingInstHelper register --prod_key 657L1 --prod_ver 2020.0.0.F --config_file /var/opt/Autodesk/Adlm/Maya2020/MayaConfig.pit --eula_locale EN_US --feature_id MAYA --lic_method STANDALONE --serial_number YOUR-SERIAL-NUMBER --sel_prod_key 657L1"
+      echo "sudo LD_LIBRARY_PATH=/opt/Autodesk/Adlm/R17/lib64 /opt/Autodesk/AdskLicensing/9.2.1.2399/helper/AdskLicensingInstHelper register --prod_key 498L1 --prod_ver 2020.0.0.F --config_file /var/opt/Autodesk/Adlm/Mudbox2020/MudboxConfig.pit --eula_locale EN_US --feature_id MUDBOX --lic_method STANDALONE --serial_number YOUR-SERIAL-NUMBER --sel_prod_key 498L1"
       ;;
     [nN] | [n|N][O|o] | * )
       wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/Autodesk_Maya_2020_ML_Linux_64bit_Hack.zip
       unzip -o Autodesk_Maya_2020_ML_Linux_64bit_Hack.zip
       if [[ -d "CLM_usr" && -d "adsklic" ]]; then
-        sudo cp CLM_usr/libadlmint.so.17.0.49 /opt/Autodesk/Adlm/R17/lib64/
         sudo cp CLM_usr/libadlmint.so.17.0.49 /opt/Autodesk/AdskLicensing/9.2.1.2399/AdskLicensingAgent/lib/
-        sudo cp CLM_usr/libadlmint.so.17.0.49 /opt/Autodesk/AdskLicensing/9.2.1.2399/helper/
-        sudo cp CLM_usr/libadlmint.so.17.0.49 /usr/autodesk/maya2020/lib/
+        sudo cp adsklic/libadlmutil.so.17.0.49 /opt/Autodesk/Adlm/R17/lib64/
         sudo cp adsklic/libadlmutil.so.17.0.49 /opt/Autodesk/AdskLicensing/9.2.1.2399/AdskLicensingAgent/lib/
-        sudo cp adsklic/libadlmutil.so.17.0.49 /usr/autodesk/maya2020/lib/
+        sudo cp adsklic/libadlmutil.so.17.0.49 /opt/Autodesk/AdskLicensing/9.2.1.2399/helper/
 
         echo "Register Standalone License"
-        sudo LD_LIBRARY_PATH=/opt/Autodesk/Adlm/R17/lib64 /opt/Autodesk/AdskLicensing/9.2.1.2399/helper/AdskLicensingInstHelper register --prod_key 657L1 --prod_ver 2020.0.0.F --config_file /var/opt/Autodesk/Adlm/Maya2020/MayaConfig.pit --eula_locale EN_US --feature_id MAYA --lic_method STANDALONE --serial_number 666-69696969 --sel_prod_key 657L1
+        sudo LD_LIBRARY_PATH=/opt/Autodesk/Adlm/R17/lib64 /opt/Autodesk/AdskLicensing/9.2.1.2399/helper/AdskLicensingInstHelper register --prod_key 498L1 --prod_ver 2020.0.0.F --config_file /var/opt/Autodesk/Adlm/Mudbox2020/MudboxConfig.pit --eula_locale EN_US --feature_id MUDBOX --lic_method STANDALONE --serial_number 666-69696969 --sel_prod_key 498L1
+
+        echo "##########################################################"
+        echo "# Click on \"Enter a serial number\" on the license form #"
+        echo "##########################################################"
       fi
       ;;
   esac
 
-  mkdir -p ~/maya/2020
-  echo -e "MAYA_DISABLE_CIP=1\nMAYA_DISABLE_CER=1\nLC_ALL=C\nMAYA_CM_DISABLE_ERROR_POPUPS=1\nMAYA_COLOR_MGT_NO_LOGGING=1" > ~/maya/2020/Maya.env
-
-  echo "You can now run Maya \\o/"
+  echo "You can now run Mudbox \\o/"
 fi
