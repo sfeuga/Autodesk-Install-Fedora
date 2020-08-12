@@ -23,6 +23,7 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   if [[ ! -f "Packages/MayaBonusTools-2017-2020-linux.sh" ]]; then
     mv MayaBonusTools-2017-2020-linux.sh Packages/
   fi
+
   (
     cd Packages
 
@@ -66,6 +67,10 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   if [[ "$?" != "0" ]]; then
     exit 2
   fi
+
+  sudo cp /usr/autodesk/maya2020/desktop/Autodesk-Maya.desktop /usr/share/applications/Autodesk-Maya2020.desktop
+  sudo sed -i 's|autodesk/maya|autodesk/maya2020|g' /usr/share/applications/Autodesk-Maya2020.desktop
+  sudo rm /usr/share/applications/Autodesk-Maya.desktop
 
   echo "Do you have a license ? (y/N)"
   read yn
