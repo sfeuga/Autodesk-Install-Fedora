@@ -62,6 +62,8 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
       chmod a+x MayaBonusTools-2017-2020-linux.sh
       sudo ./MayaBonusTools-2017-2020-linux.sh
     fi
+    sudo cp /usr/autodesk/maya*/desktop/Autodesk-Maya.desktop /usr/share/applications/
+    sudo sed -i 's|autodesk/maya|autodesk/maya2020|g' /usr/share/applications/Autodesk-Maya.desktop
   )
   if [[ "$?" != "0" ]]; then
     exit 2
