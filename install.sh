@@ -2,7 +2,7 @@
 
 if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   echo "Download Maya, Bifrost and BonusTools installers"
-  wget -c https://trial2.autodesk.com/NetSWDLD/2019/MAYA/EC2C6A7B-1F1B-4522-0054-4FF79B4B73B5/ESD/Autodesk_Maya_2019_Linux_64bit.tgz
+  wget -c https://up.autodesk.com/2019/MAYA/BF4239C3-5717-419E-8CB9-9BE11364A6C5/Autodesk_Maya_2019_1_Update_Linux_64bit.tgz
   if [[ ! -f "Bifrost2019-2.1.0.0-1.x86_64.rpm" ]]; then
     wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/Bifrost2019-2.1.0.0-1.x86_64.rpm
   fi
@@ -11,7 +11,7 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   fi
 
   echo "Decompress Maya installer"
-  tar -axvf Autodesk_Maya_2019_Linux_64bit.tgz
+  tar -axvf Autodesk_Maya_2019_1_Update_Linux_64bit.tgz
   if [[ ! "$?" == 0 ]]; then
     echo "Install failed, nothing to install"
     exit 2
@@ -33,7 +33,7 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
 
   echo "Install Maya & license utils"
   sudo dnf install -y adlmapps14-14.0.23-0.x86_64.rpm
-  sudo dnf install -y Maya2019_64-2019.0-7966.x86_64.rpm
+  sudo dnf install -y Maya2019_64-2019.0-8580.x86_64.rpm
   sudo dnf install -y adlmflexnetclient-14.0.23-0.x86_64.rpm
 
   echo "Install Bifrost, Substance & Arnold"
@@ -42,8 +42,8 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   else
     sudo dnf install -y bifrost.rpm
   fi
-  sudo chmod a+x SubstanceMaya-1.4.0-2019-Install.sh
-  sudo ./SubstanceMaya-1.4.0-2019-Install.sh
+  sudo chmod a+x SubstanceMaya-1.4.1-2019-Install.sh
+  sudo ./SubstanceMaya-1.4.1-2019-Install.sh
   sudo chmod a+x unix_installer.sh
   sudo ./unix_installer.sh
 
@@ -76,7 +76,7 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
         sudo cp CLM/libadlmint.so.14.0.23 /usr/autodesk/maya2019/lib
 
         echo "Register Standalone License"
-        sudo LD_LIBRARY_PATH=/opt/Autodesk/Adlm/R14/lib64/ /usr/autodesk/maya2019/bin/adlmreg -i S 657K1 657K1 2019.0.0.F YOUR-SERIAL-NUMBER /var/opt/Autodesk/Adlm/Maya2019/MayaConfig.pit
+        sudo LD_LIBRARY_PATH=/opt/Autodesk/Adlm/R14/lib64/ /usr/autodesk/maya2019/bin/adlmreg -i S 657K1 657K1 2019.0.0.F 666-69696969 /var/opt/Autodesk/Adlm/Maya2019/MayaConfig.pit
       fi
       ;;
   esac
