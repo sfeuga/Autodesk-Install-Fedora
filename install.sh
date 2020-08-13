@@ -2,30 +2,27 @@
 
 if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   echo "Download Mudbox"
-  wget -c https://trial2.autodesk.com/NetSWDLD/2019/MBXPRO/8F3EC3ED-9EEC-4BEC-9DAE-E36AA8BCDB76/ESD/Autodesk_Mudbox_2019_Linux64.tgz
+  wget -c https://up.autodesk.com/2019/MBXPRO/8979A63F-D115-4B3A-9B65-00B2C7364778/Autodesk_Mudbx_2019_1_ML_Linux.tgz
 
   echo "Decompress Mudbox installer"
-  tar -axvf Autodesk_Mudbox_2019_Linux64.tgz
+  tar -axvf Autodesk_Mudbx_2019_1_ML_Linux.tgz
   if [[ ! "$?" == 0 ]]; then
     echo "Install failed, nothing to install"
     exit 2
   fi
 
-  echo "Install missings components"
-  sudo dnf install -y audiofile audiofile-devel compat-openssl10 e2fsprogs-libs gamin glibc \
-    liberation-fonts-common liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts \
-    libICE libpng12 libpng15 libSM libtiff libX11 libXau libxcb libXext libXi libXinerama libXmu \
-    libXp libXt mesa-libGLU mesa-libGLw pcre-utf16 redhat-lsb tcsh xorg-x11-fonts-ISO8859-1-100dpi \
-    xorg-x11-fonts-ISO8859-1-75dpi zlib
-  if [[ "$?" != "0" ]]; then
-    exit 2
-  fi
-
   (
+    echo "Install missings components"
+    sudo dnf install -y audiofile audiofile-devel compat-openssl10 e2fsprogs-libs gamin glibc \
+      liberation-fonts-common liberation-mono-fonts liberation-sans-fonts liberation-serif-fonts \
+      libICE libpng12 libpng15 libSM libtiff libX11 libXau libxcb libXext libXi libXinerama libXmu \
+      libXp libXt mesa-libGLU mesa-libGLw pcre-utf16 redhat-lsb tcsh xorg-x11-fonts-ISO8859-1-100dpi \
+      xorg-x11-fonts-ISO8859-1-75dpi zlib
+
     echo "Install Mudbox & license utils"
     sudo dnf install -y adlmapps14-14.0.23-0.x86_64.rpm
-    sudo rpm -ivh --force Mudbox2019_64-2019-23.x86_64.rpm
     sudo dnf install -y adlmflexnetclient-14.0.23-0.x86_64.rpm
+    sudo rpm -ivh --force Mudbox2019_64-2019-23.x86_64.rpm
   )
   if [[ "$?" != "0" ]]; then
     exit 2
