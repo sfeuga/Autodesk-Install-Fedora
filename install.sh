@@ -2,10 +2,10 @@
 
 if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   echo "Download Mudbox"
-  wget -c https://trial2.autodesk.com/NetSWDLD/2019/MBXPRO/8F3EC3ED-9EEC-4BEC-9DAE-E36AA8BCDB76/ESD/Autodesk_Mudbox_2019_Linux64.tgz
+  wget -c https://up.autodesk.com/2019/MBXPRO/8979A63F-D115-4B3A-9B65-00B2C7364778/Autodesk_Mudbx_2019_1_ML_Linux.tgz
 
   echo "Decompress Mudbox installer"
-  tar -axvf Autodesk_Mudbox_2019_Linux64.tgz
+  tar -axvf Autodesk_Mudbx_2019_1_ML_Linux.tgz
   if [[ ! "$?" == 0 ]]; then
     echo "Install failed, nothing to install"
     exit 2
