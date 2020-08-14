@@ -16,9 +16,9 @@ Just download an `install.sh` file, run `chmod a+x install.sh` and run it as nor
 ### Autodesk Mudbox
 - [Autodesk Mudbox 2019 ML Linux 64bit](https://raw.githubusercontent.com/sfeuga/Autodesk-Install-Fedora/Autodesk_Mudbox_2019_ML_Linux_64bit/install.sh)
 - [Autodesk Mudbox 2019.1 ML Linux 64bit](https://raw.githubusercontent.com/sfeuga/Autodesk-Install-Fedora/Autodesk_Mudbox_2019.1_ML_Linux_64bit/install.sh)
+- [Autodesk Mudbox 2020 ML Linux 64bit](https://raw.githubusercontent.com/sfeuga/Autodesk-Install-Fedora/Autodesk_Mudbox_2020_ML_Linux_64bit/install.sh)
 
 
 ## Work in progress
-- [Autodesk Mudbox 2020 ML Linux 64bit](https://raw.githubusercontent.com/sfeuga/Autodesk-Install-Fedora/Autodesk_Mudbox_2020_ML_Linux_64bit/install.sh)
 - [Autodesk MotionBuilder 2019 ML Linux 64bit](https://raw.githubusercontent.com/sfeuga/Autodesk-Install-Fedora/Autodesk_MotionBuilder_2019_ML_Linux_64bit/install.sh)
 - [Autodesk MotionBuilder 2020 ML Linux 64bit](https://raw.githubusercontent.com/sfeuga/Autodesk-Install-Fedora/Autodesk_MotionBuilder_2020_ML_Linux_64bit/install.sh)
