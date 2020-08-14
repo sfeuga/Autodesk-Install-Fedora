@@ -2,6 +2,10 @@
 
 Just download an `install.sh` file, run `chmod a+x install.sh` and run it as normal user `./install.sh`.
 
+_All scripts are_ __tested on Fedora 32 Workstation (Gnome)__ _without any other modifications._
+
+You can download the ISO at [getfedora.org](https://download.fedoraproject.org/pub/fedora/linux/releases/32/Workstation/x86_64/iso/Fedora-Workstation-Live-x86_64-32-1.6.iso). After the installation, you can update the OS with `sudo dnf update -y && sudo dnf autoremove -y`.
+
 ## Available Software installer:
 
 ### Autodesk Maya
