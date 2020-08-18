@@ -3,11 +3,17 @@
 if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   echo "Download Maya, Bifrost and BonusTools installers"
   wget -c https://up.autodesk.com/2020/MAYA/18BBDBD5-9A15-4095-8D5E-089938EB8E24/Autodesk_Maya_2020_1_ML_Linux_64bit.tgz
+  if [[ "$?" != "0" ]]; then
+    wget -c https://gitlab.com/sfeuga/autodesk-maya-trials/-/raw/master/Autodesk_Maya_2020_1_ML_Linux_64bit.tgz
+  fi
   if [[ ! -f "Packages/Bifrost2020-2.1.0.0-1.x86_64.rpm" && ! -f "Bifrost2020-2.1.0.0-1.x86_64.rpm" ]]; then
     wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/Bifrost2020-2.1.0.0-1.x86_64.rpm
   fi
   if [[ ! -f "Packages/MayaBonusTools-2017-2020-linux.sh" && ! -f "MayaBonusTools-2017-2020-linux.sh" ]]; then
     wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/MayaBonusTools-2017-2020-linux.sh
+  fi
+  if [[ ! -f "Packages/MtoA-4.0.4-linux-2020.run" && ! -f "MtoA-4.0.4-linux-2020.run" ]]; then
+    wget -c https://gitlab.com/sfeuga/autodesk-arnold-trials/-/raw/master/MtoA-4.0.4-linux-2020.run
   fi
 
   echo "Decompress Maya installer"
@@ -22,6 +28,9 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   fi
   if [[ ! -f "Packages/MayaBonusTools-2017-2020-linux.sh" ]]; then
     mv MayaBonusTools-2017-2020-linux.sh Packages/
+  fi
+  if [[ ! -f "Packages/MtoA-4.0.4-linux-2020.run" ]]; then
+    mv MtoA-4.0.4-linux-2020.run Packages/
   fi
 
   (
@@ -48,7 +57,7 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
     sudo dnf install -y adsklicensing9.2.1.2399-0-0.x86_64.rpm
     sudo dnf install -y adlmflexnetclient-17.0.49-0.x86_64.rpm
 
-    echo "Install Bifrost, Rokoko Motion Library, Substance & Arnold"
+    echo "Install Bifrost, Rokoko Motion Library, Substance, Arnold & Maya BonusTools"
     sudo dnf install -y Substance_in_Maya-2020-2.0.3-1.el7.x86_64.rpm
     sudo dnf install -y RokokoMotionLibraryMaya-1.0.0-1.x86_64.rpm
     if [[ -f "Bifrost2020-2.1.0.0-1.x86_64.rpm" ]]; then
@@ -56,7 +65,11 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
     else
       sudo dnf install -y Bifrost2020-2.0.5.0-1.x86_64.rpm
     fi
-    sudo ./unix_installer.sh
+    sudo chmod a+x ./unix_installer.sh && sudo ./unix_installer.sh
+    if [[ -f "MtoA-4.0.4-linux-2020.run" ]]; then
+      chmod a+x MtoA-4.0.4-linux-2020.run
+      sudo ./MtoA-4.0.4-linux-2020.run
+    fi
 
     if [[ -f "MayaBonusTools-2017-2020-linux.sh" ]]; then
       echo "Install Maya BonusTools"
@@ -97,7 +110,7 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   esac
 
   mkdir -p ~/maya/2020
-  echo -e "MAYA_DISABLE_CIP=1\nMAYA_DISABLE_CER=1\nLC_ALL=C\nMAYA_CM_DISABLE_ERROR_POPUPS=1\nMAYA_COLOR_MGT_NO_LOGGING=1" > ~/maya/2020/Maya.env
+  echo -e "MAYA_DISABLE_CIP=1\nMAYA_DISABLE_CER=1\nLC_ALL=C\nMAYA_CM_DISABLE_ERROR_POPUPS=1\nMAYA_COLOR_MGT_NO_LOGGING=1" >> ~/maya/2020/Maya.env
 
   echo "You can now run Maya \\o/"
 fi
