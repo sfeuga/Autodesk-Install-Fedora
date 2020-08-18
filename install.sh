@@ -3,11 +3,17 @@
 if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   echo "Download Maya, Bifrost and BonusTools installers"
   wget -c http://trial2.autodesk.com/NetSWDLD/2020/MAYA/BB8314BA-8DE1-45E4-B827-79F63158212E/ESD/Autodesk_Maya_2020_ML_Linux_64bit.tgz
+  if [[ "$?" != "0" ]]; then
+    wget -c https://gitlab.com/sfeuga/autodesk-maya-trials/-/raw/master/Autodesk_Maya_2020_ML_Linux_64bit.tgz
+  fi
   if [[ ! -f "Packages/Bifrost2020-2.1.0.0-1.x86_64.rpm" && ! -f "Bifrost2020-2.1.0.0-1.x86_64.rpm" ]]; then
     wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/Bifrost2020-2.1.0.0-1.x86_64.rpm
   fi
   if [[ ! -f "Packages/MayaBonusTools-2017-2020-linux.sh" && ! -f "MayaBonusTools-2017-2020-linux.sh" ]]; then
     wget -c https://gitlab.com/sfeuga/pif/-/raw/master/Sources/MayaBonusTools-2017-2020-linux.sh
+  fi
+  if [[ ! -f "Packages/MtoA-4.0.4-linux-2020.run" && ! -f "MtoA-4.0.4-linux-2020.run" ]]; then
+    wget -c https://gitlab.com/sfeuga/autodesk-arnold-trials/-/raw/master/MtoA-4.0.4-linux-2020.run
   fi
 
   echo "Decompress Maya installer"
@@ -22,6 +28,9 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
   fi
   if [[ ! -f "Packages/MayaBonusTools-2017-2020-linux.sh" ]]; then
     mv MayaBonusTools-2017-2020-linux.sh Packages/
+  fi
+  if [[ ! -f "Packages/MtoA-4.0.4-linux-2020.run" ]]; then
+    mv MtoA-4.0.4-linux-2020.run Packages/
   fi
 
   (
@@ -48,14 +57,18 @@ if [[ $(grep "Fedora 32" /etc/os-release) ]]; then
     sudo dnf install -y adsklicensing9.2.1.2399-0-0.x86_64.rpm
     sudo dnf install -y adlmflexnetclient-17.0.49-0.x86_64.rpm
 
-    echo "Install Bifrost, Substance & Arnold"
+    echo "Install Bifrost, Substance, Arnold & Maya BonusTools"
     sudo dnf install -y Substance_in_Maya-2020-2.0.3-1.el7.x86_64.rpm
     if [[ -f "Bifrost2020-2.1.0.0-1.x86_64.rpm" ]]; then
       sudo dnf install -y Bifrost2020-2.1.0.0-1.x86_64.rpm
     else
       sudo dnf install -y Bifrost2020-2.0.3.0-1.x86_64.rpm
     fi
-    sudo ./unix_installer.sh
+    sudo chmod a+x ./unix_installer.sh && sudo ./unix_installer.sh
+    if [[ -f "MtoA-4.0.4-linux-2020.run" ]]; then
+      chmod a+x MtoA-4.0.4-linux-2020.run
+      sudo ./MtoA-4.0.4-linux-2020.run
+    fi
 
     if [[ -f "MayaBonusTools-2017-2020-linux.sh" ]]; then
       echo "Install Maya BonusTools"
